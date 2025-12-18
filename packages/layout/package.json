@@ -1,5 +1,5 @@
 {
-  "name": "ats-form-pdf-layout",
+  "name": "ats-form-react-pdf-layout",
   "version": "4.4.2",
   "license": "MIT",
   "description": "Resolve document component's layout",
