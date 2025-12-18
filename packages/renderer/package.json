@@ -1,5 +1,5 @@
 {
-  "name": "ats-pdf-renderer-4",
+  "name": "ats-form-pdf-renderer",
   "version": "4.3.2",
   "license": "MIT",
   "description": "Create PDF files on the browser and server",
@@ -26,7 +26,7 @@
     "@babel/runtime": "^7.20.13",
     "@react-pdf/fns": "3.1.2",
     "@react-pdf/font": "^4.0.3",
-    "ats-pdf-layout-4": "^4.4.2",
+    "ats-form-pdf-layout": "^4.4.2",
     "@react-pdf/pdfkit": "^4.0.4",
     "@react-pdf/primitives": "^4.1.1",
     "@react-pdf/reconciler": "^1.1.4",
