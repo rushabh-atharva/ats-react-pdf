@@ -37,7 +37,7 @@ const shouldBreak = (
   if ('fixed' in child.props) return false;
 
   const shouldSplit = height < child.box.top + child.box.height;
-  const canWrap = getWrap(child);
+  const canWrap = getWrap(child, child, []);
 
   // Calculate the y coordinate where the desired presence of the child ends
   const endOfPresence = getEndOfPresence(child, futureElements);

@@ -5,7 +5,7 @@ import FontStore from '@react-pdf/font';
 import isFixed from '../node/isFixed';
 import splitText from '../text/splitText';
 import splitNode from '../node/splitNode';
-import canNodeWrap from '../node/getWrap';
+import canNodeWrap, { NON_WRAP_TYPES } from '../node/getWrap';
 import getWrapArea from '../page/getWrapArea';
 import getContentArea from '../page/getContentArea';
 import createInstances from '../node/createInstances';
@@ -50,6 +50,7 @@ const relayoutPage = compose(
 );
 
 const warnUnavailableSpace = (node: SafeNode) => {
+  // eslint-disable-next-line no-console
   console.warn(
     `Node of type ${node.type} can't wrap between pages and it's bigger than available page height`,
   );
@@ -73,8 +74,9 @@ const splitNodes = (height: number, contentArea: number, nodes: SafeNode[]) => {
       height,
       currentChildren,
     );
+    const prevChild = nodes.length > 0 && i > 0 ? nodes[i - 1] : undefined;
     const shouldSplit = height + SAFETY_THRESHOLD < nodeTop + nodeHeight;
-    const canWrap = canNodeWrap(child);
+    const canWrap = canNodeWrap(child, prevChild, currentChildren);
     const fitsInsidePage = nodeHeight <= contentArea;
 
     if (isFixed(child)) {
@@ -91,9 +93,24 @@ const splitNodes = (height: number, contentArea: number, nodes: SafeNode[]) => {
     }
 
     if (!fitsInsidePage && !canWrap) {
-      currentChildren.push(child);
-      nextChildren.push(...futureNodes);
-      warnUnavailableSpace(child);
+      if (NON_WRAP_TYPES.includes(child.type)) {
+        currentChildren.push(child);
+        nextChildren.push(...futureNodes);
+        warnUnavailableSpace(child);
+      } else {
+        // We don't want to break non wrapable nodes, so we just let them be.
+        const box = Object.assign({}, child.box, {
+          top: child.box.top - height,
+        });
+        const props = Object.assign({}, child.props, {
+          wrap: true,
+          break: false,
+        });
+        const next = Object.assign({}, child, { box, props });
+
+        currentChildren.push(...futureFixedNodes);
+        nextChildren.push(next, ...futureNodes);
+      }
       break;
     }
 
@@ -116,18 +133,18 @@ const splitNodes = (height: number, contentArea: number, nodes: SafeNode[]) => {
       // All children are moved to the next page, it doesn't make sense to show the parent on the current page
       if (child.children.length > 0 && currentChild.children.length === 0) {
         // But if the current page is empty then we can just include the parent on the current page
-        if (currentChildren.length === 0) {
-          currentChildren.push(child, ...futureFixedNodes);
-          nextChildren.push(...futureNodes);
-        } else {
-          const box = Object.assign({}, child.box, {
-            top: child.box.top - height,
-          });
-          const next = Object.assign({}, child, { box });
+        // if (currentChildren.length === 0) {
+        //   currentChildren.push(child, ...futureFixedNodes);
+        //   nextChildren.push(...futureNodes);
+        // } else {
+        const box = Object.assign({}, child.box, {
+          top: child.box.top - height,
+        });
+        const next = Object.assign({}, child, { box });
 
-          currentChildren.push(...futureFixedNodes);
-          nextChildren.push(next, ...futureNodes);
-        }
+        currentChildren.push(...futureFixedNodes);
+        nextChildren.push(next, ...futureNodes);
+        // }
         break;
       }
 
