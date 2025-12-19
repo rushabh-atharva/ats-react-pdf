@@ -33,7 +33,7 @@ const resolveBorderShorthand = <K extends BorderKey>(
     const width =
       typeof widthMatch !== 'undefined'
         ? transformUnit(container, widthMatch)
-        : undefined;
+        : 0;
 
     if (key.match(/(Top|Right|Bottom|Left)$/)) {
       return {
