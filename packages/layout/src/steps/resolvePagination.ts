@@ -56,6 +56,37 @@ const warnUnavailableSpace = (node: SafeNode) => {
   );
 };
 
+const breakableViewChild = (children, height, path = '', currentChildren) => {
+  for (let i = 0; i < children.length; i += 1) {
+    if (children[i].type !== 'VIEW') continue;
+
+    if (
+      shouldNodeBreak(
+        children[i],
+        children.slice(i + 1, height),
+        height,
+        currentChildren,
+      )
+    ) {
+      return {
+        child: children[i],
+        path: `${path}/${i}`,
+      };
+    }
+
+    if (children[i].children && children[i].children.length > 0) {
+      const breakable = breakableViewChild(
+        children[i].children,
+        height,
+        `${path}/${i}`,
+        currentChildren,
+      );
+      if (breakable) return breakable;
+    }
+  }
+  return null;
+};
+
 const splitNodes = (height: number, contentArea: number, nodes: SafeNode[]) => {
   const currentChildren: SafeNode[] = [];
   const nextChildren: SafeNode[] = [];
@@ -74,6 +105,12 @@ const splitNodes = (height: number, contentArea: number, nodes: SafeNode[]) => {
       height,
       currentChildren,
     );
+
+    const firstBreakableViewChild =
+      child.children &&
+      child.children.length > 0 &&
+      breakableViewChild(child.children, height, '', currentChildren);
+
     const prevChild = nodes.length > 0 && i > 0 ? nodes[i - 1] : undefined;
     const shouldSplit = height + SAFETY_THRESHOLD < nodeTop + nodeHeight;
     const canWrap = canNodeWrap(child, prevChild, currentChildren);
@@ -97,6 +134,7 @@ const splitNodes = (height: number, contentArea: number, nodes: SafeNode[]) => {
         currentChildren.push(child);
         nextChildren.push(...futureNodes);
         warnUnavailableSpace(child);
+        break;
       } else {
         // We don't want to break non wrapable nodes, so we just let them be.
         const box = Object.assign({}, child.box, {
@@ -110,8 +148,8 @@ const splitNodes = (height: number, contentArea: number, nodes: SafeNode[]) => {
 
         currentChildren.push(...futureFixedNodes);
         nextChildren.push(next, ...futureNodes);
+        break;
       }
-      break;
     }
 
     if (shouldBreak) {
@@ -127,7 +165,7 @@ const splitNodes = (height: number, contentArea: number, nodes: SafeNode[]) => {
       break;
     }
 
-    if (shouldSplit) {
+    if (shouldSplit || firstBreakableViewChild) {
       const [currentChild, nextChild] = split(child, height, contentArea);
 
       // All children are moved to the next page, it doesn't make sense to show the parent on the current page
@@ -137,10 +175,10 @@ const splitNodes = (height: number, contentArea: number, nodes: SafeNode[]) => {
         //   currentChildren.push(child, ...futureFixedNodes);
         //   nextChildren.push(...futureNodes);
         // } else {
-        const box = Object.assign({}, child.box, {
-          top: child.box.top - height,
+        const box = Object.assign({}, nextChild.box, {
+          top: nextChild.box.top - height,
         });
-        const next = Object.assign({}, child, { box });
+        const next = Object.assign({}, nextChild, { box });
 
         currentChildren.push(...futureFixedNodes);
         nextChildren.push(next, ...futureNodes);
