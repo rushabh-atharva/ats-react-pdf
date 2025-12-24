@@ -27,14 +27,14 @@ This package is used to _create_ PDFs using React. If you wish to _display_ exis
 ## How to install
 
 ```sh
-yarn add @react-pdf/renderer
+yarn add ats-form-react-pdf-renderer
 ```
 
 ## How it works
 
 ```jsx
 import React from 'react';
-import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet } from 'ats-form-react-pdf-renderer';
 
 // Create styles
 const styles = StyleSheet.create({
@@ -69,7 +69,7 @@ const MyDocument = () => (
 ```jsx
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { PDFViewer } from '@react-pdf/renderer';
+import { PDFViewer } from 'ats-form-react-pdf-renderer';
 
 const App = () => (
   <PDFViewer>
@@ -84,33 +84,7 @@ ReactDOM.render(<App />, document.getElementById('root'));
 
 ```jsx
 import React from 'react';
-import ReactPDF from '@react-pdf/renderer';
+import ReactPDF from 'ats-form-react-pdf-renderer';
 
 ReactPDF.render(<MyDocument />, `${__dirname}/example.pdf`);
 ```
-
-## Contributors
-
-This project exists thanks to all the people who contribute. Looking to contribute? Please check our [[contribute]](https://github.com/diegomura/react-pdf/blob/master/.github/CONTRIBUTING.md) document for more details about how to setup a development environment and submitting code.
-
-<a href="https://github.com/diegomura/react-pdf/blob/master/.github/CONTRIBUTING.md"><img src="https://opencollective.com/react-pdf/contributors.svg?width=890" /></a>
-
-## Sponsors
-
-Thank you to all our sponsors! [[Become a sponsors](https://opencollective.com/react-pdf#sponsors)]
-
-<a href="https://opencollective.com/react-pdf#sponsors" target="_blank"><img src="https://opencollective.com/react-pdf/sponsors.svg?width=890"></a>
-
-## Backers
-
-Thank you to all our backers! [[Become a backer](https://opencollective.com/react-pdf#backer)]
-
-<a href="https://opencollective.com/react-pdf#backers" target="_blank"><img src="https://opencollective.com/react-pdf/backers.svg?width=890"></a>
-
-## License
-
-MIT © [Diego Muracciole](http://github.com/diegomura)
-
----
-
-[![](https://img.shields.io/npm/dt/@react-pdf/renderer.svg?style=flat)](https://www.npmjs.com/package/@react-pdf/renderer)
