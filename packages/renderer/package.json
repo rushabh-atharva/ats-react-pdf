@@ -1,10 +1,10 @@
 {
   "name": "ats-form-react-pdf-renderer",
-  "version": "4.3.5",
+  "version": "4.3.6",
   "license": "MIT",
   "description": "Create PDF files on the browser and server",
-  "author": "Diego Muracciole <diegomuracciole@gmail.com>",
-  "homepage": "https://github.com/diegomura/react-pdf#readme",
+  "author": "Atharva System",
+  "homepage": "https://github.com/Atharva-System/react-pdf#readme",
   "type": "module",
   "main": "./lib/react-pdf.js",
   "browser": {
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/diegomura/react-pdf.git",
+    "url": "https://github.com/Atharva-System/react-pdf.git",
     "directory": "packages/renderer"
   },
   "scripts": {
@@ -26,7 +26,7 @@
     "@babel/runtime": "^7.20.13",
     "@react-pdf/fns": "3.1.2",
     "@react-pdf/font": "^4.0.3",
-    "ats-form-react-pdf-layout": "^4.4.5",
+    "ats-form-react-pdf-layout": "^4.4.6",
     "@react-pdf/pdfkit": "^4.0.4",
     "@react-pdf/primitives": "^4.1.1",
     "@react-pdf/reconciler": "^1.1.4",
